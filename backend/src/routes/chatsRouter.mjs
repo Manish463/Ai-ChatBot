@@ -8,7 +8,7 @@ const router = express.Router();
 // To get all the chats from database
 router.get('/', async (req, res) => {
   try {
-    const chats = await Chat.find({}).sort({ createdAt: -1 }); // returns an array of objects
+    const chats = await Chat.find({}).sort({ updatedAt: -1 }); // returns an array of objects
 
     res.status(200).json({
       success: true,
@@ -94,7 +94,7 @@ router.delete('/:id', async (req, res) => {
       });
     }
 
-    res.status(204).json({
+    res.status(200).json({
       success: true,
       message: "Chat Deleted!",
       data: chat,
@@ -104,7 +104,7 @@ router.delete('/:id', async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: "Failed to delete chat",
+      message: "Failed to delete chat!",
       error: error.message
     });
   }
@@ -137,7 +137,7 @@ router.patch('/:id', async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "Chat updated successfully",
+      message: `Chat name updated with ${chat.name}`,
       data: chat,
     });
   } catch (error) {
@@ -174,7 +174,7 @@ router.post("/:id", async (req, res) => {
     }
 
     const result = await query(user);
-    console.log("result: ", result);
+    // console.log("result: ", result);
 
     if (result.ok) {
       return res.status(result.status || 500).json({
