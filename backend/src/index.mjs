@@ -14,7 +14,7 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.listen(3000, async () => {
+app.listen(3000, "0.0.0.0", async () => {
   console.log("Server running on port 3000");
   await connectDB();
 });

@@ -20,7 +20,7 @@ export const query = async (data) => {
   );
 
   const result = await response.json();
-  console.log("Response: ", response);
+  // console.log("Response: ", response);
 
   return {
     success: response.ok,
