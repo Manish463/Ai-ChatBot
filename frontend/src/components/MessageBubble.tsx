@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
+import type { Message } from "../Types";
 
-export default function MessageBubble({ value }: any) {
-  const { message } = value;
+export default function MessageBubble({ message }: { message: Message }) {
 
   return (
     <div className="w-full">
@@ -11,7 +11,7 @@ export default function MessageBubble({ value }: any) {
         className="flex justify-end mb-2"
       >
         <div
-          className={`px-4 py-2 rounded-xl max-w-4/5 md:max-w-3/5 bg-blue-500 text-white`}
+          className={`px-4 py-3 rounded-2xl max-w-4/5 md:max-w-3/5 bg-linear-to-r from-blue-500 to-blue-600 text-white shadow-md`}
         >
           {message.user}
         </div>
@@ -22,8 +22,7 @@ export default function MessageBubble({ value }: any) {
         className="flex justify-start mb-4"
       >
         <div
-          className={`px-4 py-2 rounded-xl max-w-4/5 md:max-w-3/5 bg-gray-200 text-black
-          `}
+          className={`px-4 py-3 rounded-2xl max-w-4/5 md:max-w-3/5 bg-gray-100 text-gray-800 shadow-md`}
         >
           {message.ai}
         </div>

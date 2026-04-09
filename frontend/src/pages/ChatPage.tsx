@@ -3,10 +3,11 @@ import ChatWindow from "../components/ChatWindow.tsx";
 import { useEffect, useState } from "react";
 import { createChat, getChats } from "../api/ChatApi.tsx";
 import { Bounce, ToastContainer, toast } from "react-toastify";
+import type { Chat } from "../Types.tsx";
 
 export default function ChatPage() {
-  const [chats, setChats] = useState<any[]>([]);
-  const [activeChat, setActiveChat] = useState<any>(null);
+  const [chats, setChats] = useState<Chat[]>([]);
+  const [activeChat, setActiveChat] = useState<Chat | null>(null);
   const [chatsLoading, setChatsLoading] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
 
@@ -50,29 +51,23 @@ export default function ChatPage() {
     fetchChats();
   }, []);
 
-  // Props for Sidebar component
-  const sidebarProps = {
-    chats,
-    setChats,
-    setActiveChat,
-    chatsLoading,
-    showSidebar,
-    setShowSidebar,
-    handleNewChat,
-  };
-
-  // Props for ChatWindow component
-  const chatWindowProps = {
-    activeChat,
-    setActiveChat,
-    setShowSidebar,
-    handleNewChat,
-  };
-
   return (
     <div className="flex h-dvh bg-white">
-      <Sidebar value={sidebarProps} />
-      <ChatWindow value={chatWindowProps} />
+      <Sidebar
+        chats={chats}
+        setChats={setChats}
+        setActiveChat={setActiveChat}
+        chatsLoading={chatsLoading}
+        showSidebar={showSidebar}
+        setShowSidebar={setShowSidebar}
+        handleNewChat={handleNewChat}
+      />
+      <ChatWindow
+        activeChat={activeChat}
+        setActiveChat={setActiveChat}
+        setShowSidebar={setShowSidebar}
+        handleNewChat={handleNewChat}
+      />
       <ToastContainer
         position="top-center"
         autoClose={5000}

@@ -2,47 +2,57 @@ import { motion } from "framer-motion";
 import { updateChat } from "../api/ChatApi";
 import { toast } from "react-toastify";
 import { useState } from "react";
+import type { Chat } from "../Types";
 
-export default function InputBox({ value }: any) {
-  const { activeChat, setActiveChat, query, setQuery } = value;
+export default function InputBox({
+  activeChat,
+  setActiveChat,
+  query,
+  setQuery,
+}: {
+  activeChat: Chat | null;
+  setActiveChat: (chat: Chat | null) => void;
+  query: string;
+  setQuery: (query: string) => void;
+}) {
   const [sendingQuery, setSendingQuery] = useState<boolean>(false);
 
   const sendMessage = async () => {
-    setSendingQuery(true);
-
-    if (query.trim(" ").length <= 1) {
+    if (!query.trim()) {
       toast.warning("Input can't be empty!");
-      setSendingQuery(false);
       return;
     }
 
+    setSendingQuery(true);
+
     try {
-      const result = await updateChat(activeChat?._id, query);
+      const result = await updateChat(activeChat!._id, query);
       setActiveChat(result.data);
       setQuery("");
       setSendingQuery(false);
     } catch (error: any) {
       console.log(error.message);
       toast.error("Server error!");
+      setSendingQuery(false);
     }
   };
 
   return (
-    <div className="flex items-center gap-2 mt-4 border-t-2 border-gray-300 pt-4">
+    <div className="flex items-center gap-3 mt-4 border-t-2 border-gray-300 pt-4">
       <input
-        className={`w-full py-3 px-6 rounded-full outline-none bg-gray-200`}
+        className="w-full py-3 px-6 rounded-full outline-none bg-gray-100 focus:bg-white focus:ring-2 focus:ring-blue-300 transition-all duration-200 placeholder-gray-500"
         placeholder="Type a message..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+        onKeyDown={(e) => e.key === "Enter" && !sendingQuery && sendMessage()}
       />
 
       {/* Send Button */}
       <motion.button
-        whileTap={{ scale: 0.9 }}
+        whileTap={{ scale: 0.95 }}
         onClick={sendMessage}
-        disabled={query.length > 1}
-        className="bg-blue-500 text-white w-12 h-12 flex items-center justify-center rounded-full cursor-pointer shrink-0"
+        disabled={!query.trim() || sendingQuery}
+        className="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white w-12 h-12 flex items-center justify-center rounded-full cursor-pointer shrink-0 transition-colors duration-200"
       >
         {!sendingQuery ? (
           <img className="w-6 h-6" src="/icons/send.svg" alt="Send" />

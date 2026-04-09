@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { deleteChat, renameChat } from "../api/ChatApi";
 import { toast } from "react-toastify";
 import { useEffect, useRef, useState } from "react";
+import type { Chat } from "../Types";
 
 const parent = {
   hidden: {},
@@ -17,19 +18,26 @@ const child = {
   },
 };
 
-export default function Sidebar({ value }: any) {
-  const {
-    chats,
-    setChats,
-    setActiveChat,
-    chatsLoading,
-    showSidebar,
-    setShowSidebar,
-    handleNewChat,
-  } = value;
+export default function Sidebar({
+  chats,
+  setChats,
+  setActiveChat,
+  chatsLoading,
+  showSidebar,
+  setShowSidebar,
+  handleNewChat,
+}: {
+  chats: Chat[];
+  setChats: (chats: Chat[] | ((prev: Chat[]) => Chat[])) => void;
+  setActiveChat: (chat: Chat | null) => void;
+  chatsLoading: boolean;
+  showSidebar: boolean;
+  setShowSidebar: (show: boolean) => void;
+  handleNewChat: () => void;
+}) {
   const [show, setShow] = useState<any>({});
   const [showRenameWindow, setShowRenameWindow] = useState(false);
-  const [updatingChat, setUpdatingChat] = useState<any>(null);
+  const [updatingChat, setUpdatingChat] = useState<Chat | null>(null);
   const nameInp = useRef<any>(null);
   const boxRef = useRef<HTMLSpanElement | null>(null);
 
@@ -54,9 +62,9 @@ export default function Sidebar({ value }: any) {
 
       if (result?.success) {
         toast.success(result.message);
-        setChats((prev: any) => prev.filter((c: any) => c._id !== id));
+        setChats((prev) => prev.filter((c) => c._id !== id));
         setShow({});
-        setActiveChat();
+        setActiveChat(null);
       } else {
         toast.error(result?.message || "Failed to delete");
       }
@@ -66,20 +74,15 @@ export default function Sidebar({ value }: any) {
   };
 
   const handleRename = async () => {
+    if (!updatingChat || !nameInp.current.value.trim()) return;
+
     try {
-      const result = await renameChat(updatingChat._id, nameInp?.current.value);
+      const result = await renameChat(updatingChat._id, nameInp.current.value);
       console.log(result);
 
       if (result?.success) {
         toast.success(result.message);
-        console.log(result);
-
-        setChats((prev: any) =>
-          prev.filter((c: any) => c._id !== updatingChat._id),
-        );
-        setChats((prev: any) => {
-          return [result.data, ...prev];
-        });
+        setChats((prev) => prev.map((c) => (c._id === updatingChat._id ? result.data : c)));
         setShow({});
         setUpdatingChat(null);
         nameInp.current.value = "";
@@ -94,17 +97,17 @@ export default function Sidebar({ value }: any) {
 
   return (
     <div
-      className={`${showSidebar ? "w-full" : "w-0"} absolute md:static z-10 md:w-72 h-screen bg-gray-100 shadow-md flex flex-col overflow-hidden`}
+      className={`${showSidebar ? "w-full" : "w-0"} absolute md:static z-10 md:w-72 h-screen bg-white shadow-lg flex flex-col overflow-hidden transition-all duration-300`}
     >
       {/* Top name and icon */}
-      <div className="p-4 relative">
+      <div className="p-4 relative bg-gray-50">
         <motion.h2 className="text-2xl font-bold mb-4 gap-2 flex cursor-default">
           <div className="absolute right-5 top-5 md:hidden">
             <img
               onClick={() => setShowSidebar(false)}
-              className="invert size-8"
+              className="invert size-8 cursor-pointer"
               src="/icons/arrow.svg"
-              alt=">>"
+              alt="Close"
             />
           </div>
           <span>🤖</span>
@@ -119,7 +122,7 @@ export default function Sidebar({ value }: any) {
             setShowSidebar(false);
           }}
           whileHover={{ scale: 1.05 }}
-          className="w-full bg-blue-100 hover:bg-blue-200 p-2 my-4 flex justify-start items-center gap-1 rounded-xl"
+          className="w-full bg-blue-100 hover:bg-blue-200 p-3 my-4 flex justify-start items-center gap-2 rounded-xl transition-colors duration-200"
         >
           <span className="material-symbols-outlined">add</span>
           <span className="font-semibold">New Chat</span>
@@ -127,8 +130,8 @@ export default function Sidebar({ value }: any) {
       </div>
 
       {/* Recent and chats */}
-      <div className="mb-4 w-full flex flex-col flex-1 pl-2">
-        <h3 className="text-gray-500 font-semibold">Recent Chats</h3>
+      <div className="mb-4 w-full flex flex-col flex-1 pl-2 bg-gray-50">
+        <h3 className="text-gray-500 font-semibold p-2">Recent Chats</h3>
 
         <div className="w-full p-2 overflow-x-hidden overflow-y-auto flex-1 max-h-[72vh]">
           {chatsLoading && (
@@ -144,7 +147,7 @@ export default function Sidebar({ value }: any) {
                 variants={parent}
                 initial="hidden"
                 whileHover="visible"
-                className="p-2 cursor-pointer rounded hover:bg-gray-200 text-md truncate flex justify-between"
+                className="p-3 cursor-pointer rounded-lg hover:bg-gray-200 text-md truncate flex justify-between transition-colors duration-200"
               >
                 <span
                   onClick={() => {
@@ -189,7 +192,7 @@ export default function Sidebar({ value }: any) {
                   {show[chat._id] && (
                     <span
                       ref={boxRef}
-                      className="absolute left-[35vw] md:left-68 mt-2 py-2 px-4 flex flex-col gap-1 border border-gray-200 bg-white rounded-md text-sm font-semibold shadow-md"
+                      className="absolute left-[35vw] md:left-68 mt-2 py-2 px-4 flex flex-col gap-1 border border-gray-200 bg-white rounded-lg text-sm font-semibold shadow-lg"
                     >
                       <span className="flex gap-1 hover:bg-gray-300 px-2 py-1 rounded-sm">
                         <img
@@ -231,28 +234,28 @@ export default function Sidebar({ value }: any) {
         </div>
       </div>
       {showRenameWindow && (
-        <div className="absolute w-full h-full p-6 backdrop-blur-sm flex justify-center items-center">
-          <div className="flex flex-col justify-evenly items-center p-6 w-84 min-h-36 bg-white border-2 border-gray-400 rounded-xl gap-2">
+        <div className="absolute w-full h-full p-6 backdrop-blur-sm flex justify-center items-center bg-opacity-20">
+          <div className="flex flex-col justify-evenly items-center p-6 w-84 min-h-36 bg-white border-2 border-gray-300 rounded-xl gap-4 shadow-xl">
             <h1 className="text-xl font-bold w-full text-center mb-4">
-              Rename
+              Rename Chat
             </h1>
             <input
               ref={nameInp}
               type="text"
-              className="w-full bg-gray-200 rounded-lg px-4 py-2"
+              className="w-full bg-gray-100 rounded-lg px-4 py-3 focus:bg-white focus:ring-2 focus:ring-blue-300 transition-all duration-200"
               placeholder="Type new name..."
               onKeyDown={(e) => e.key === "Enter" && handleRename()}
             />
             <div className="w-full flex justify-end gap-2 px-2">
               <button
                 onClick={() => setShowRenameWindow(false)}
-                className="text-sm text-gray-600 font-semibold"
+                className="text-sm text-gray-600 font-semibold hover:bg-gray-100 px-3 py-1 rounded transition-colors duration-200"
               >
                 Cancel
               </button>
               <button
                 onClick={handleRename}
-                className="text-sm text-red-600 font-semibold"
+                className="text-sm text-red-600 font-semibold hover:bg-red-100 px-3 py-1 rounded transition-colors duration-200"
               >
                 Rename
               </button>
