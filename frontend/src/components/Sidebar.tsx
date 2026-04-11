@@ -58,17 +58,18 @@ export default function Sidebar({
   const handleDelete = async (id: string) => {
     try {
       const result = await deleteChat(id);
-      console.log(result);
 
       if (result?.success) {
-        toast.success(result.message);
+        toast.success(`"${result.data.name}" - ${result.message}`);
         setChats((prev) => prev.filter((c) => c._id !== id));
         setShow({});
         setActiveChat(null);
       } else {
-        toast.error(result?.message || "Failed to delete");
+        console.error(result.error);
+        toast.error(result?.message);
       }
-    } catch (error: unknown) {
+    } catch (error: any) {
+      console.error(error.message);
       toast.error("Server Error");
     }
   };
@@ -78,7 +79,6 @@ export default function Sidebar({
 
     try {
       const result = await renameChat(updatingChat._id, nameInp.current.value);
-      console.log(result);
 
       if (result?.success) {
         toast.success(result.message);
@@ -88,9 +88,11 @@ export default function Sidebar({
         nameInp.current.value = "";
         setShowRenameWindow(false);
       } else {
-        toast.error(result?.message || "Failed to Rename");
+        console.error(result.error);
+        toast.error(result?.message);
       }
     } catch (error: any) {
+      console.error(error.message);
       toast.error("Server Error");
     }
   };

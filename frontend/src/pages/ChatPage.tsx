@@ -19,29 +19,31 @@ export default function ChatPage() {
       if (result?.success) {
         setChats((prev: any) => [result.data, ...prev]);
         setActiveChat(result.data);
-        toast.success(result.message);
       } else {
-        toast.error(result?.message || "Failed to create chat");
+        console.error(result.error);
+        toast.error(result?.message);
       }
     } catch (error: any) {
-      console.log(error);
-      toast.error(error?.message || "Server Error!");
+      console.error(error.message);
+      toast.error("Server Error!");
     }
   };
 
   useEffect(() => {
     const fetchChats = async () => {
       setChatsLoading(true);
+
       try {
         const result = await getChats();
 
         if (result.success) {
           setChats(result.data);
-          toast.success(result.message);
         } else {
+          console.error(result.error);
           toast.error(result.message);
         }
       } catch (error: any) {
+        console.error(error.message);
         toast.error("Server Error");
       } finally {
         setChatsLoading(false);

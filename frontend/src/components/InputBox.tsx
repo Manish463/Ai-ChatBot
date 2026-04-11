@@ -24,15 +24,20 @@ export default function InputBox({
     }
 
     setSendingQuery(true);
-
     try {
       const result = await updateChat(activeChat!._id, query);
-      setActiveChat(result.data);
-      setQuery("");
-      setSendingQuery(false);
+
+      if(result.success) {
+        setActiveChat(result.data);
+        setQuery("");
+      } else {
+        console.error(result.error);
+        toast.error(result.message);
+      }
     } catch (error: any) {
-      console.log(error.message);
+      console.error(error.message);
       toast.error("Server error!");
+    } finally {
       setSendingQuery(false);
     }
   };

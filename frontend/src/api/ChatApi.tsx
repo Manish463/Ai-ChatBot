@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const apiUri=import.meta.env.VITE_API_URL;
+if(!apiUri) console.error("Backend URI is empty!");
 
 const API = axios.create({
     baseURL: apiUri
