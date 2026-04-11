@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "Chats fetched successfully",
+      message: "Chats fetched successfully!",
       data: chats
     });
   } catch (error) {
@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: "Failed to fetch chats",
+      message: "Failed to fetch chats!",
       error: error.message,
     });
   }
@@ -44,7 +44,7 @@ router.post("/", async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: "Failed to create chat",
+      message: "Failed to create chat!",
       error: error.message
     });
   }
@@ -74,7 +74,7 @@ router.get('/:id', async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: "Failed to fetch chat",
+      message: "Failed to fetch chat!",
       error: error.message
     });
   }
@@ -90,7 +90,7 @@ router.delete('/:id', async (req, res) => {
     if (!chat) {
       return res.status(404).json({
         success: false,
-        message: "Chat not found"
+        message: "Chat not found!!"
       });
     }
 
@@ -118,7 +118,7 @@ router.patch('/:id', async (req, res) => {
   if (!chatName || chatName.trim() === "") {
     return res.status(400).json({
       success: false,
-      message: "Chat name cannot be empty"
+      message: "Chat name cannot be empty!"
     });
   }
 
@@ -131,13 +131,13 @@ router.patch('/:id', async (req, res) => {
     if (!chat) {
       return res.status(404).json({
         success: false,
-        message: "Chat not found"
+        message: "Chat not found!"
       });
     }
 
     res.status(200).json({
       success: true,
-      message: `Chat name updated with ${chat.name}`,
+      message: `Chat name updated with ${chat.name}!`,
       data: chat,
     });
   } catch (error) {
@@ -145,13 +145,13 @@ router.patch('/:id', async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: "Failed to rename chat",
+      message: "Failed to rename chat!",
       error: error.message
     });
   }
 })
 
-// To update a chat because of messages
+// To update a chat during conversation
 router.post("/:id", async (req, res) => {
   const id = req.params.id;
   const user = req.body.msg;
@@ -159,7 +159,7 @@ router.post("/:id", async (req, res) => {
   if (!user || user.trim() === "") {
     return res.status(400).json({
       success: false,
-      message: "Message cannot be empty"
+      message: "Message cannot be empty!"
     });
   }
 
@@ -174,9 +174,8 @@ router.post("/:id", async (req, res) => {
     }
 
     const result = await query(user);
-    // console.log("result: ", result);
 
-    if (result.ok) {
+    if (!result.success) {
       return res.status(result.status || 500).json({
         success: false,
         message: "AI API Error",
@@ -206,7 +205,7 @@ router.post("/:id", async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: "Failed to update chat",
+      message: "Failed to update chat!",
       error: error.message
     });
   }
