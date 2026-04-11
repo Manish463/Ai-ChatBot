@@ -7,6 +7,7 @@ import { connectDB } from "./services/db.mjs";
 const app = express();
 app.use(cors());
 app.use(express.json());
+await connectDB();
 
 app.use('/chats', chatsRouter);
 
@@ -16,5 +17,4 @@ app.get("/", (req, res) => {
 
 app.listen(3000, "0.0.0.0", async () => {
   console.log("Server running on port 3000");
-  await connectDB();
 });
