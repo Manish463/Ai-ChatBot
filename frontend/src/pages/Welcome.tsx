@@ -113,7 +113,7 @@ export default function Welcome() {
           initial={{ opacity: 0, x: 40 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.4 }}
-          className="mt-12 md:mt-0 relative"
+          className="mt-12 md:mt-0 relative flex flex-col items-center"
         >
           {/* Main illustration */}
           <div className="relative w-65 h-65 md:w-80 md:h-80 bg-linear-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center shadow-2xl">
