@@ -116,7 +116,7 @@ export default function Welcome() {
           className="mt-12 md:mt-0 relative"
         >
           {/* Main illustration */}
-          <div className="relative w-80 h-80 bg-linear-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center shadow-2xl">
+          <div className="relative w-65 h-65 md:w-80 md:h-80 bg-linear-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center shadow-2xl">
             <motion.div
               animate={{ y: [0, -15, 0] }}
               transition={{ repeat: Infinity, duration: 3 }}

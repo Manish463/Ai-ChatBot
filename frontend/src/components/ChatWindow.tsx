@@ -54,7 +54,7 @@ export default function ChatWindow({
           ))}
         </div>
       ) : (
-        <div className="flex-1 flex flex-col justify-center items-center gap-6 cursor-default bg-white rounded-lg shadow-sm p-8">
+        <div className="flex-1 flex flex-col justify-center items-center gap-2 cursor-default bg-white rounded-lg shadow-sm p-8">
           <motion.div
             animate={{ y: [0, -10, 0] }}
             transition={{ repeat: Infinity, duration: 2 }}
@@ -62,9 +62,11 @@ export default function ChatWindow({
           >
             🤖
           </motion.div>
-          <p className="text-3xl font-semibold text-gray-700">AI Chatbot</p>
+          <p className="text-3xl font-semibold text-gray-700 mt-2">AI Chatbot</p>
 
-          <p className="flex flex-col gap-3 justify-center items-center text-center">
+          { activeChat && <p className="text-lg font-medium text-gray-500">How can I help you?</p> }
+
+          { !activeChat && <p className="flex flex-col gap-3 justify-center items-center text-center">
             <span className="text-xl text-gray-500">Start a new conversation</span>
             <motion.button
               onClick={() => {
@@ -77,7 +79,7 @@ export default function ChatWindow({
               <span className="material-symbols-outlined">add</span>
               <span>New Chat</span>
             </motion.button>
-          </p>
+          </p>}
         </div>
       )}
 

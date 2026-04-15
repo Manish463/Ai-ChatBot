@@ -194,7 +194,7 @@ export default function Sidebar({
                   {show[chat._id] && (
                     <span
                       ref={boxRef}
-                      className="absolute left-[35vw] md:left-68 mt-2 py-2 px-4 flex flex-col gap-1 border border-gray-200 bg-white rounded-lg text-sm font-semibold shadow-lg"
+                      className="absolute left-[60vw] md:left-68 mt-2 py-2 px-4 flex flex-col gap-1 border border-gray-200 bg-white rounded-lg text-sm font-semibold shadow-lg"
                     >
                       <span className="flex gap-1 hover:bg-gray-300 px-2 py-1 rounded-sm">
                         <img
